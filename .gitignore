@@ -1,0 +1,9 @@
+# Phục vụ phát triển, không push lên repo chính
+refs/
+
+# IDE and OS files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*.log
