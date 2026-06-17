@@ -57,15 +57,28 @@ odoo18-coder/
 
 ** Sub-folders structure:
 steps/
-└── 01-planning/
+├── 01-planning/
+│   ├── SKILL.md                        # Leader của step này
+│   │                                   # Trigger thứ tự: discovery → analysis → decision
+│   │
+│   ├── product-discovery/              # Git clone từ repo của bạn
+│   │   └── (toàn bộ nội dung repo)     # SKILL.md không sửa, chỉ customize qua wrapper
+│   │
+│   ├── discovery-wrapper.md            # Customize lại cho phù hợp
+│   │                                   # Override/extend product-discovery cho context Odoo
+│   │
+│   └── output-template.md              # Chuẩn hóa output của step 01
+│                                       # → Feed trực tiếp vào step 02-scaffold
+│
+└── 02-scaffold/
     ├── SKILL.md                        # Leader của step này
-    │                                   # Trigger thứ tự: discovery → analysis → decision
+    │                                   # Định nghĩa Pre-flight checks, Decision Tree và quy tắc Living File (chờ user duyệt trước khi sang Step 03)
     │
-    ├── product-discovery/              # Git clone từ repo của bạn
-    │   └── (toàn bộ nội dung repo)     # SKILL.md không sửa, chỉ customize qua wrapper
+    ├── dependency-matrix.md            # Ma trận phân tích sự phụ thuộc (Dependencies Resolution)
+    │                                   # Note: Chứa Alert Protocol cảnh báo module Enterprise & Handoff skeleton
     │
-    ├── discovery-wrapper.md            # Customize lại cho phù hợp
-    │                                   # Override/extend product-discovery cho context Odoo
+    ├── data-path-rules.md              # Quy tắc đặt tên và quản lý tệp dữ liệu XML/CSV
+    │                                   # Note: Phân tách rạch ròi thứ tự load của ACL CSV và View XML
     │
-    └── output-template.md              # Chuẩn hóa output của step 01
-                                        # → Feed trực tiếp vào step 02-scaffold
+    └── asset-registry-guide.md         # Quy chuẩn đăng ký Web Assets cho OWL 2.0 và Backend
+                                        # Note: Loại bỏ hoàn toàn cú pháp kế thừa asset kiểu cũ của Odoo 15/16
