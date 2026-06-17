@@ -1,187 +1,85 @@
-# Odoo 18 Addon — Planning Output
+---
+artifact_name: Odoo Addon Planning Output
+purpose: >
+  Capture confirmed requirements from the product-discovery session
+  and translate them into Odoo 18 technical decisions.
+  This output serves as the mandatory input for step 02-scaffold.
+feeds_into: steps/02-scaffold/SKILL.md
+requires_confirmation: true
+---
 
-> **Agent Instructions:**
-> Fill all `[INSERT:...]` fields based on the completed discovery session (Phase 1) and technical analysis (Phase 2).
-> - If a value is confirmed → fill it directly
-> - If a value is still unknown → write `[TBD: <reason>]`
-> - Never leave a field blank
-> - Present this completed template to the user for confirmation before proceeding to 02-scaffold
+### 🤖 AGENT DIRECTIVE
+
+**Processing Steps — MUST execute BEFORE generating the output:**
+
+1. **Load Discovery Output:** Read the results from the product-discovery session (including the feature list, user roles, and priority tiers: Core 🔴, Nice-to-have 🟡, Out-of-scope ⚫).
+2. **Inheritance Analysis:** For each Core feature, check if Odoo 18 has existing core modules (e.g., `helpdesk`, `project`, `sale`, `account`, `mail`) that cover all or part of the functionality. Always prioritize extending/inheriting Odoo core modules before proposing custom models from scratch.
+3. **Expose Key Decisions (VISIBLE TO USER — Requires Approval):**
+   Before generating the final output, present a summary of the following decisions to the user for explicit confirmation:
+   - Technical addon name (e.g., `addon_technical_name`)
+   - Inheritance vs. Standalone (from scratch) decisions with detailed reasoning
+   - Expected technical dependencies (the `depends[]` list)
+   - Estimated number of custom models to be created
+4. **Await User Confirmation:** Pause and wait for the user to confirm the exposed decisions before proceeding to fill out the Technical Specification sections below.
+5. **Output Generation:** Once the user approves the key decisions, populate the Planning Output template below in full. Keep any background reasoning in a collapsible `<details><summary>Agent Reasoning</summary>...</details>` section to keep the main output clean.
 
 ---
 
-## Section 1 — Project Identity
+## 📋 PLANNING OUTPUT
 
-**Addon Technical Name:** [INSERT: Short Text | snake_case, no spaces, e.g. `it_ticketing` or `hr_overtime_request`]
+### 1. Addon Identity
+- **Display Name:** [INSERT: Display Name (e.g., IT Helpdesk Ticketing)]
+- **Technical Name:** [INSERT: Technical Name (snake_case, e.g., `it_ticketing`)]
+- **Version:** 18.0.1.0.0
+- **Author / License:** [INSERT: Author Name / License (e.g., LGPL-3)]
+- **Odoo Edition & Category:** [INSERT: Select One | Community / Enterprise] — Category: [INSERT: Short Text | e.g. "Services", "Human Resources"]
 
-**Addon Display Name:** [INSERT: Short Text | Human-readable, e.g. "IT Helpdesk Ticketing" or "HR Overtime Request"]
+### 2. Inheritance Decision
+| Module Odoo 18 | Relation | Rationale |
+|----------------|----------|-----------|
+| [INSERT: Module Name (e.g., `helpdesk`)] | [INSERT: inherit / extend / none] | [INSERT: Detailed pros/cons of inheritance vs. standalone] |
+| [INSERT: Module Name (e.g., `mail`)] | [INSERT: inherit / extend / none] | [INSERT: e.g., Inherited for chatter tracking via mail.thread] |
 
-**Odoo Version:** 18.0
+### 3. Core Features (confirmed)
+| Feature ID | Feature Description | Model Strategy | Est. Complexity |
+|------------|---------------------|----------------|-----------------|
+| FR-01 | [INSERT: Feature name & goal] | [INSERT: e.g., Inherit helpdesk.ticket / New it.ticket] | [INSERT: Low / Medium / High] |
+| FR-02 | [INSERT: Feature name & goal] | [INSERT: e.g., Inherit helpdesk.ticket / New it.ticket] | [INSERT: Low / Medium / High] |
 
-**Edition:** [INSERT: Select One | Community / Enterprise]
+### 4. User Roles & Permissions
+| Role Name | Access Level | Domain / Constraints |
+|-----------|--------------|----------------------|
+| [INSERT: e.g., IT Manager] | [INSERT: read/write/create/delete] | [INSERT: e.g., Full access to all tickets] |
+| [INSERT: e.g., Employee] | [INSERT: read/create/write (own)] | [INSERT: e.g., Can only see/edit tickets they created] |
 
-**Category:** [INSERT: Short Text | e.g. "Human Resources", "Services", "Accounting", "Technical" — must match Odoo official category list]
-
-**Author / Maintainer:** [INSERT: Short Text | Name or team maintaining this addon]
-
----
-
-## Section 2 — Business Context
-
-**Business Problem:**
-[INSERT: Multi-line | Describe the operational pain point or business gap this addon solves. 2-4 sentences.]
-
-**Business Objective (Measurable):**
-[INSERT: Multi-line | The specific, measurable goal. Format: "Reduce X from A to B by [date]" or "Enable Y process that currently takes Z minutes to be completed in under W minutes"]
-
-**Success Metrics / KPIs:**
-[INSERT: List | One KPI per line. E.g.:
-- Average ticket resolution time < 24 hours
-- Zero IT support requests lost (currently: ~20% tracked via email only)
-]
-
----
-
-## Section 3 — Stakeholders & Access
-
-**Key Stakeholders:**
-
-| Role | Department | Interest / Need |
-|---|---|---|
-| [INSERT: Role] | [INSERT: Dept] | [INSERT: What they need from this addon] |
-| [INSERT: Role] | [INSERT: Dept] | [INSERT: What they need from this addon] |
-
-**Odoo User Group Mapping:**
-
-| Business Role | Odoo Group | Permissions (Summary) |
-|---|---|---|
-| [INSERT: Role, e.g. IT Manager] | `[module].group_manager` | [INSERT: e.g. Full access: create, read, edit, delete, approve] |
-| [INSERT: Role, e.g. IT Staff] | `[module].group_user` | [INSERT: e.g. Create + read own records only] |
-| [INSERT: Role, e.g. Employee (requester)] | `base.group_portal` or `[module].group_requester` | [INSERT: e.g. Submit tickets + view own status] |
-
----
-
-## Section 4 — Feature Inventory
-
-> Legend: 🔴 Core (v1 must-have) | 🟡 Nice-to-have (optional, add later) | ⚫ Out-of-scope
-
-**Core Features (🔴 — must build in Step 02–09):**
-
-| # | Feature | Description |
-|---|---|---|
-| FR-01 | [INSERT: Feature Name] | [INSERT: Short description of what the system must do] |
-| FR-02 | [INSERT: Feature Name] | [INSERT: Short description] |
-| FR-03 | [INSERT: Feature Name] | [INSERT: Short description] |
-
-**Nice-to-have Features (🟡 — defer to `optional/` or future sprint):**
-
-| # | Feature | Reason deferred |
-|---|---|---|
-| NTH-01 | [INSERT: Feature Name] | [INSERT: e.g. Low priority, not blocking v1 delivery] |
-
-**Out-of-scope (⚫ — explicitly excluded, do not build):**
-
-- [INSERT: Feature or system that is explicitly excluded, e.g. "Mobile app integration — use Odoo PWA instead"]
-- [INSERT: ...]
-
----
-
-## Section 5 — Technical Architecture Decision
-
-### A. Core Module Relationship
-
-| Feature Area | Core Module Candidate | Relationship |
-|---|---|---|
-| [INSERT: e.g. Ticketing] | [INSERT: e.g. `helpdesk`] | [INSERT: Select One | Inherit / Standalone (new model)] |
-| [INSERT: e.g. Messaging] | `mail` | Inherit via `mail.thread` mixin |
-| [INSERT: e.g. Tasks] | [INSERT: e.g. `project`] | [INSERT: Select One | Inherit / Standalone] |
-
-### B. Final Inheritance Decision
-
-**Decision:** [INSERT: Select One | Inherit from `<module_name>` / Build Standalone / Mixed (specify below)]
-
-**Rationale:**
-[INSERT: Multi-line | Explain why. Reference the pros/cons analysis from Phase 2. E.g.:
-"Inherit from `helpdesk` because: (1) SLA & team assignment logic already built, (2) portal submission is native, (3) reduces development from ~15 models to ~3 extensions.
-Cons accepted: requires Helpdesk module installed, but this is acceptable since client already uses it."]
-
-### C. Estimated Scope
-
-| Component | Count | Notes |
-|---|---|---|
-| `models.Model` (regular) | [INSERT: Number] | [INSERT: List model names if known] |
-| `models.TransientModel` (wizards) | [INSERT: Number] | [INSERT: e.g. "Reject Reason popup"] |
-| Main List Views | [INSERT: Number] | [INSERT: One per model minimum] |
-| Main Form Views | [INSERT: Number] | [INSERT: One per model minimum] |
-| OWL Components needed? | [INSERT: Select One | Yes → flag optional/owl-components / No] | [INSERT: Brief reason] |
-| API Controller needed? | [INSERT: Select One | Yes → flag optional/api-controllers / No] | [INSERT: Brief reason] |
-
----
-
-## Section 6 — Workflow & State Machine
-
-> Fill this section ONLY if the addon has an approval flow or lifecycle states.
-
-**State Machine:**
-
-```
-[INSERT: ASCII state diagram or text. Example:
-Draft → [Submit] → Pending Approval → [Approve] → In Progress → [Resolve] → Done
-                                    → [Reject]  → Rejected (end)
-                 → [Cancel]         → Cancelled (end)
+### 5. Technical Dependencies (expected)
+```python
+# Agent will finalize this list after using 02-scaffold/dependency-matrix.md
+depends = [
+    'base',
+    'mail',
+    # [INSERT: Other dependent modules, e.g., 'helpdesk', 'project']
 ]
 ```
 
-**Transition Rules:**
-
-| From State | To State | Action | Who Can Trigger |
-|---|---|---|---|
-| [INSERT: State] | [INSERT: State] | [INSERT: Button/action name] | [INSERT: User group] |
-| [INSERT: State] | [INSERT: State] | [INSERT: Button/action name] | [INSERT: User group] |
-
----
-
-## Section 7 — Non-Functional Requirements
-
-| NFR | Requirement |
-|---|---|
-| Performance | [INSERT: e.g. "List view must load < 2s for up to 10,000 records"] |
-| Security | [INSERT: e.g. "Users can only see their own tickets; Managers see all"] |
-| Availability | [INSERT: e.g. "Same as core Odoo uptime SLA"] |
-| Data Retention | [INSERT: e.g. "Closed tickets archived after 2 years"] |
-| Localization | [INSERT: e.g. "Vietnamese + English UI labels required"] |
+### 6. Out-of-scope (explicitly excluded)
+- **Feature/System:** [INSERT: E.g., Mobile app integration]
+  - *Reason for exclusion:* [INSERT: E.g., Out of scope for v1, Odoo web client is mobile responsive]
+- **Feature/System:** [INSERT: ...]
+  - *Reason for exclusion:* [INSERT: ...]
 
 ---
 
-## Section 8 — Open Questions & Assumptions
+<details>
+<summary>🔍 Agent Reasoning</summary>
 
-**Open Questions (must resolve before coding):**
+[INSERT: Detailed technical notes, gap analysis, and system flow explanation for the developer's review. This section does not form part of the final addon code but documents the LLM's architecture design thoughts.]
 
-| # | Question | Owner | Deadline |
-|---|---|---|---|
-| Q-01 | [INSERT: Unresolved question] | [INSERT: Person responsible to answer] | [INSERT: ISO Date or "Before 02-scaffold"] |
-| Q-02 | [INSERT: Unresolved question] | [INSERT: Owner] | [INSERT: Deadline] |
-
-**Assumptions Made:**
-
-- [INSERT: Assumption confirmed without explicit user statement. E.g. "Assumed Enterprise edition — client mentioned Odoo Sign"]
-- [INSERT: ...]
+</details>
 
 ---
 
-## Section 9 — Constraints
-
-- [INSERT: Known constraint. E.g. "Must not add dependencies to modules not already installed on client server"]
-- [INSERT: E.g. "Must follow company's existing security groups naming convention: `<addon>_group_<role>`"]
-- [INSERT: ...]
-
----
-
-## Section 10 — Handoff Confirmation
-
-**User Confirmation Status:** [INSERT: Select One | ⏳ PENDING USER REVIEW / ✅ CONFIRMED — proceed to 02-scaffold]
-
-**Confirmed by:** [INSERT: Short Text | User name or "User (chat)"]
-
-**Date Confirmed:** [INSERT: ISO Date | YYYY-MM-DD]
-
-> **Agent Note:** Do NOT proceed to `02-scaffold` until this field shows `✅ CONFIRMED`.
+## 🚦 Handoff Confirmation
+- **Status:** [INSERT: Select One | ⏳ AWAITING USER CONFIRMATION / ✅ CONFIRMED — Proceed to 02-scaffold]
+- **Confirmed By:** [INSERT: User Name / Chat Confirmation]
+- **Date Confirmed:** [INSERT: YYYY-MM-DD]
