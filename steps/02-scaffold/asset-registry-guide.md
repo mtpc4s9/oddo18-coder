@@ -7,21 +7,21 @@ used_by: steps/02-scaffold/SKILL.md
 ---
 
 ### 🤖 AGENT DIRECTIVE (HIDDEN FROM FINAL OUTPUT)
-**Luật khai báo tài nguyên (Asset Registration Rules) trong Odoo 18:**
+**Asset Registration Rules in Odoo 18:**
 
-1. **WHEN (Khi nào cần khai báo?):**
-   - Agent **BẮT BUỘC** phải đọc YAML Frontmatter từ file output của `01-planning`.
-   - **Nếu cờ `has_owl_components: true`**: Agent phải khởi tạo khối (block) `'assets'` trong `__manifest__.py`. Đồng thời, bắt buộc thêm `'web'` vào mảng `'depends': []`.
-   - **Nếu cờ `has_owl_components: false`**: Agent bỏ qua khối `'assets'` để giữ file gọn gàng, giảm thiểu độ phức tạp không cần thiết.
+1. **WHEN (When to register assets?):**
+   - The Agent **MUST** read the YAML Frontmatter from the output file of `01-planning`.
+   - **If the flag `has_owl_components: true`**: The Agent must initialize the `'assets'` block in `__manifest__.py`. Additionally, `'web'` must be added to the `'depends': []` array.
+   - **If the flag `has_owl_components: false`**: The Agent must skip the `'assets'` block to keep the file clean and minimize unnecessary complexity.
 
-2. **HOW (Khai báo như thế nào cho chuẩn Odoo 18?):**
-   - **CẤM (FORBIDDEN):** Tuyệt đối không dùng thẻ `<template id="assets_backend" inherit_id="web.assets_backend">` bên trong một file XML để load JS/CSS (Đây là legacy pattern đã bị loại bỏ).
-   - **BẮT BUỘC (REQUIRED):** Phải khai báo trực tiếp dưới dạng một Dictionary (từ điển) bên trong tệp `__manifest__.py`.
-   - Để thêm tài nguyên vào giao diện quản trị (Backend UI), BẮT BUỘC phải dùng từ khóa (key) `'web.assets_backend'`.
+2. **HOW (How to declare assets for Odoo 18?):**
+   - **FORBIDDEN:** Never use the `<template id="assets_backend" inherit_id="web.assets_backend">` tag inside an XML file to load JS/CSS (this is a legacy pattern and has been removed).
+   - **REQUIRED:** You must declare them directly as a dictionary inside the `__manifest__.py` file.
+   - To add assets to the Backend UI, you **MUST** use the `'web.assets_backend'` key.
 
-3. **QUY TẮC GIỮ CHỖ (PLACEHOLDER RULE DÀNH CHO BƯỚC SCAFFOLD):**
-   - Tại Step 02 (Scaffold), các tệp JS/XML/SCSS vật lý chưa được sinh ra (chúng sẽ được xử lý độc lập tại nhánh `optional/owl-components`).
-   - Do đó, Agent chỉ được phép đặt một dòng chú thích giữ chỗ (Anchor Comment) để **Step 10-review** nhận diện và tự động điền (Backfill) đường dẫn thực tế.
+3. **PLACEHOLDER RULE FOR SCAFFOLD STEP:**
+   - At Step 02 (Scaffold), physical JS/XML/SCSS files have not been generated yet (they will be handled in the `optional/owl-components` branch).
+   - Therefore, the Agent is only allowed to insert a placeholder comment (Anchor Comment) for **Step 10-review** to identify and backfill with physical file paths.
 
 ---
 

@@ -70,15 +70,24 @@ steps/
 │   └── output-template.md              # Chuẩn hóa output của step 01
 │                                       # → Feed trực tiếp vào step 02-scaffold
 │
-└── 02-scaffold/
-    ├── SKILL.md                        # Leader của step này
-    │                                   # Định nghĩa Pre-flight checks, Decision Tree và quy tắc Living File (chờ user duyệt trước khi sang Step 03)
-    │
-    ├── dependency-matrix.md            # Ma trận phân tích sự phụ thuộc (Dependencies Resolution)
-    │                                   # Note: Chứa Alert Protocol cảnh báo module Enterprise & Handoff skeleton
-    │
-    ├── data-path-rules.md              # Quy tắc đặt tên và quản lý tệp dữ liệu XML/CSV
-    │                                   # Note: Phân tách rạch ròi thứ tự load của ACL CSV và View XML
-    │
-    └── asset-registry-guide.md         # Quy chuẩn đăng ký Web Assets cho OWL 2.0 và Backend
-                                        # Note: Loại bỏ hoàn toàn cú pháp kế thừa asset kiểu cũ của Odoo 15/16
+├── 02-scaffold/
+│   ├── SKILL.md                        # Leader của step này
+│   │                                   # Định nghĩa Pre-flight checks, Decision Tree và quy tắc Living File (chờ user duyệt trước khi sang Step 03)
+│   │
+│   ├── dependency-matrix.md            # Ma trận phân tích sự phụ thuộc (Dependencies Resolution)
+│   │                                   # Note: Chứa Alert Protocol cảnh báo module Enterprise & Handoff skeleton
+│   │
+│   ├── data-path-rules.md              # Quy tắc đặt tên và quản lý tệp dữ liệu XML/CSV
+│   │                                   # Note: Phân tách rạch ròi thứ tự load của ACL CSV và View XML
+│   │
+│   └── asset-registry-guide.md         # Quy chuẩn đăng ký Web Assets cho OWL 2.0 và Backend
+│                                       # Note: Loại bỏ hoàn toàn cú pháp kế thừa asset kiểu cũ của Odoo 15/16
+│
+└── 03-business-logic/
+    ├── SKILL.md                        # Leader of this step
+    │                                   # Translates confirmed Blueprint into pseudo-coded business logic
+    ├── notation-guide.md               # Naming conventions & pseudo-code format rules
+    │                                   # Note: Defines BL-XX ID system for logic traceability
+    └── output-template.md              # Output format for the Business Logic Design document
+                                        # → Feeds into steps 04-models, 05-security, 06-views
+

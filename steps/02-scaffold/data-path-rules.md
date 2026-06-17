@@ -7,55 +7,55 @@ used_by: steps/02-scaffold/SKILL.md
 ---
 
 ### 🤖 AGENT DIRECTIVE (HIDDEN FROM FINAL OUTPUT)
-**Luật xử lý mảng `data[]` trong `__manifest__.py`:**
+**Rules for handling the `data[]` array in `__manifest__.py`:**
 
-1. **TRẠNG THÁI KHỞI TẠO (INITIALIZE MODE):** 
-   - Mảng `data: []` **BẮT BUỘC PHẢI ĐỂ TRỐNG** hoàn toàn. 
-   - **Tuyệt đối không** tự bịa (hallucinate) hoặc điền trước các đường dẫn file (VD: `views/views.xml`).
+1. **INITIALIZE MODE:** 
+   - The `data: []` array **MUST BE LEFT COMPLETELY EMPTY**. 
+   - **Do not** hallucinate or pre-populate file paths (e.g., `views/views.xml`).
 
-2. **LÝ DO (WHY?):** 
-   - Kiến trúc Odoo 18 kiểm tra sự tồn tại vật lý của file ngay lúc parse Manifest. Nếu một file được khai báo trong `data[]` nhưng chưa được tạo ra trên ổ cứng (vì các step 04, 05, 06 chưa chạy tới), Odoo sẽ crash ngay lập tức với lỗi `FileNotFoundError` và chặn toàn bộ quá trình cài đặt.
+2. **WHY?** 
+   - Odoo 18 checks for the physical existence of files during manifest parsing. If a file is declared in `data[]` but does not exist on disk yet (as steps 04, 05, 06 have not run), Odoo will immediately crash with a `FileNotFoundError` and block installation.
 
-3. **QUY TRÌNH XỬ LÝ (RESOLUTION):** 
-   - Việc điền đường dẫn vào mảng `data[]` được ủy quyền hoàn toàn cho **Step 10-review**. Ở bước 10, Agent sẽ quét lại toàn bộ thư mục vật lý và điền ngược lại (Backfill) vào file `__manifest__.py`.
-   - Ở Step 02 này, Agent chỉ được phép đặt một dòng Comment làm điểm neo (Anchor) để Step 10 nhận diện.
+3. **RESOLUTION:** 
+   - Populating the `data[]` array is delegated entirely to **Step 10-review**. In Step 10, the Agent will scan physical directories and backfill the paths into `__manifest__.py`.
+   - In Step 02, the Agent must only insert comments as anchors for Step 10 to locate.
 
 ---
 
 ### 📂 ODOO 18 STRICT DATA LOADING ORDER
 
-Khi Step 10 quay lại để điền mảng `data[]`, nó **BẮT BUỘC** phải tuân thủ thứ tự nạp (load order) từ trên xuống dưới như sau. Odoo đọc file tuần tự, nếu nạp View trước khi nạp Security, hệ thống sẽ báo lỗi Access Rights.
+When Step 10 returns to populate the `data[]` array, it **MUST** follow the load order from top to bottom. Odoo loads files sequentially; if a View is loaded before Security, the system will raise an Access Rights error.
 
-**Thứ tự chuẩn (Template Anchor):**
+**Standard Template Anchor:**
 
 ```python
     'data': [
-        # BẮT BUỘC THEO THỨ TỰ ODOO 18:
-        # 1. QUẢN TRỊ BẢO MẬT (CSV TRƯỚC, XML SAU)
+        # MANDATORY ORDER FOR ODOO 18:
+        # 1. SECURITY AND ACLs (CSV FIRST, XML SECOND)
         # 'security/ir.model.access.csv',
         # 'security/security_rules.xml',
         
-        # 2. DỮ LIỆU KHỞI TẠO VÀ CẤU HÌNH
+        # 2. INITIALIZATION AND CONFIGURATION DATA
         # 'data/ir_sequence_data.xml',
         # 'data/ir_cron_data.xml',
         # 'data/mail_template_data.xml',
         
-        # 3. GIAO DIỆN NGƯỜI DÙNG (VIEWS & MENUS)
-        # 'views/my_model_views.xml', (Luôn dùng thẻ <list>, KHÔNG dùng thẻ <tree>)
+        # 3. USER INTERFACE (VIEWS & MENUS)
+        # 'views/my_model_views.xml', (Always use <list> tag, DO NOT use deprecated <tree> tag)
         # 'views/res_config_settings_views.xml',
         # 'views/menus.xml',
         
-        # 4. GIAO DIỆN WIZARD (POPUP)
+        # 4. WIZARDS AND POPUPS
         # 'wizard/my_wizard_views.xml',
         
-        # 5. BÁO CÁO IN ẤN (QWEB REPORTS)
+        # 5. PRINTABLE QWEB REPORTS
         # 'report/my_report_templates.xml',
         # 'report/my_report_actions.xml',
     ],
 ```
 
-### Quy tắc bất di bất dịch:
+### Golden Rules:
 
-    File CSV luôn đi trước File XML: File security/ir.model.access.csv phải là file đầu tiên trong danh sách. Nếu Model chưa có quyền truy cập, các file XML View nạp phía sau sẽ bị từ chối (Access Denied).
+    CSV Files Before XML Files: The security/ir.model.access.csv file must be the first file loaded. If models do not have defined access rights, any subsequent XML Views loaded will be rejected with an Access Denied error.
     
-    Menu nạp sau Action: File chứa thẻ <menuitem> (thường là menus.xml) nên được đặt sau các file chứa ir.actions.act_window để đảm bảo Action đã tồn tại khi Menu tham chiếu tới.
+    Menus After Actions: Files containing <menuitem> tags (usually menus.xml) must be loaded after the files containing their referenced window actions (ir.actions.act_window) to ensure references do not break.

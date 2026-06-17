@@ -1,5 +1,5 @@
 ---
-artifact_name: Odoo 18 Addon Blueprint
+artifact_name: "Odoo 18 Addon Blueprint"
 purpose: >
   Capture confirmed requirements from the product-discovery session
   and translate them into Odoo 18 technical decisions.

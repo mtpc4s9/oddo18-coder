@@ -12,15 +12,15 @@ last_verified: "2024-12"
 
 ### 🤖 AGENT DIRECTIVE (HIDDEN FROM FINAL OUTPUT)
 **How to use this matrix & handle Living Files:**
-1. **Check File Existence:** Trước khi viết code, kiểm tra xem `__manifest__.py` và `__init__.py` đã tồn tại chưa.
-2. **Mode INITIALIZE (Nếu file chưa tồn tại):** 
-   - Load Blueprint từ `steps/01-planning/output-template.md`.
-   - Sinh mới hoàn toàn cấu trúc `__manifest__.py` với `data: []` (bỏ trống).
-3. **Mode UPDATE (Nếu file đã tồn tại):** 
-   - Đọc nội dung hiện tại của `__manifest__.py`.
-   - Đối chiếu với Dependency Matrix, nếu có module mới cần thêm, hãy **APPEND (thêm vào)** mảng `depends[]` hiện tại. Tuyệt đối không ghi đè (overwrite) làm mất các thư mục trong mảng `data[]` hoặc `assets` đã được khai báo ở các bước trước.
-4. **Deduplication:** Luôn loại bỏ các module trùng lặp trong mảng `depends[]`.
-5. **Enterprise Alert:** Cảnh báo user ngay lập tức nếu phát hiện dependency thuộc bản Enterprise.
+1. **Check File Existence:** Before writing code, check if `__manifest__.py` and `__init__.py` already exist.
+2. **INITIALIZE Mode (If file does not exist):** 
+   - Load Blueprint from `steps/01-planning/output-template.md`.
+   - Generate a brand new `__manifest__.py` structure with `data: []` (empty array).
+3. **UPDATE Mode (If file already exists):** 
+   - Read the current content of `__manifest__.py`.
+   - Cross-reference with the Dependency Matrix, and if new modules are required, **APPEND** them to the existing `depends[]` array. Do NOT overwrite or lose directories/assets declared in `data[]` or `assets` by previous steps.
+4. **Deduplication:** Always remove duplicate modules in the `depends[]` array.
+5. **Enterprise Alert:** Alert the user immediately if any dependency belongs to the Enterprise edition.
 ---
 
 ## 📦 DEPENDENCY MATRIX — ODOO 18
@@ -139,26 +139,25 @@ last_verified: "2024-12"
 ---
 
 ## ⚠️ ENTERPRISE DEPENDENCY ALERT PROTOCOL
-
-Nếu Blueprint từ `01-planning` yêu cầu bất kỳ module **Enterprise** nào trong bảng trên, Agent **PHẢI** dừng lại và hiển thị cảnh báo sau cho user trước khi tiếp tục:
+If the Blueprint from `01-planning` requires any **Enterprise** module in the table above, the Agent **MUST** pause and display the following warning to the user before proceeding:
 
 ```
 ⚠️ ENTERPRISE MODULE DETECTED
-Tính năng "[tên feature]" yêu cầu module Odoo Enterprise: `[tên module]`
+Feature "[feature name]" requires Odoo Enterprise module: `[module name]`
 
-Lựa chọn:
-  A) Xác nhận dùng Enterprise — tiếp tục scaffold với dependency này
-  B) Thay thế bằng Community alternative — Agent sẽ gợi ý workaround
-  C) Chuyển feature này sang Nice-to-have 🟡 và bỏ qua ở v1
+Options:
+  A) Confirm Enterprise usage — proceed scaffolding with this dependency
+  B) Replace with Community alternative — Agent will suggest a workaround
+  C) Shift this feature to Nice-to-have 🟡 and defer in v1
 
-→ User chọn phương án nào?
+→ Which option do you choose?
 ```
 
 ---
 
 ## 📐 DEPENDENCY ORDERING RULES
 
-Khi đã có danh sách `depends[]`, sắp xếp theo thứ tự sau (Odoo parse từ trên xuống):
+Once the `depends[]` list is determined, sort it according to the following order (Odoo parses from top to bottom):
 
 ```python
 depends = [
@@ -200,14 +199,14 @@ depends = [
 Sau khi resolve xong `depends[]`, Agent sinh ra 2 file thực tế của addon theo cơ chế **Living Files (Tệp sống)**:
 
 **🤖 AGENT DIRECTIVE (LIVING FILES PROTOCOL):**
-1. **Nếu file CHƯA tồn tại (Mode INITIALIZE):** Sinh mới hoàn toàn theo cấu trúc mẫu bên dưới.
-2. **Nếu file ĐÃ tồn tại (Mode UPDATE):** Chỉ **APPEND (thêm vào)** mảng `depends[]`. Tuyệt đối không ghi đè làm mất các file trong mảng `data[]` hoặc `assets` đã được khai báo.
+1. **If file DOES NOT exist (INITIALIZE Mode):** Generate a brand new file according to the template below.
+2. **If file ALREADY exists (UPDATE Mode):** Only **APPEND** to the `depends[]` array. Do NOT overwrite or lose files/assets declared in `data[]` or `assets`.
 
 ---
 
 **OUTPUT FILE 1: `your_addon/__init__.py`**
 
-Sẽ được cập nhật tự động ở Step 04 (Models) và Step 07 (Wizards). Tại Step 02, chỉ để trống với comment header:
+This will be updated automatically in Step 04 (Models) and Step 07 (Wizards). In Step 02, keep it empty with a comment header:
 
 ```python
 # -*- coding: utf-8 -*-
@@ -217,34 +216,34 @@ Sẽ được cập nhật tự động ở Step 04 (Models) và Step 07 (Wizard
 # from . import wizards   # Uncommented at Step 07
 ```
 
-> Xem chi tiết quy tắc tại: `references/templates/init_template.py`
+> See detailed rules at: `references/templates/init_template.py`
 
 ---
 
 **OUTPUT FILE 2: `your_addon/__manifest__.py`**
 
-Sinh mới với cấu trúc xương sống dưới đây. Bắt buộc giữ nguyên các dòng comments trong mảng `data[]` để làm điểm neo (anchor) cho Step 10:
+Generate a new file with the skeleton structure below. You must retain the comment lines in the `data[]` array as anchors for Step 10:
 
 ```python
 # -*- coding: utf-8 -*-
 {
-    'name': '[INSERT: Display Name từ Blueprint]',
+    'name': '[INSERT: Display Name from Blueprint]',
     'version': '18.0.1.0.0',
-    'category': '[INSERT: Category từ Blueprint]',
-    'summary': '[INSERT: Business Problem từ Blueprint]',
+    'category': '[INSERT: Category from Blueprint]',
+    'summary': '[INSERT: Business Problem from Blueprint]',
     'description': """
-        [INSERT: Feature Inventory từ Blueprint]
+        [INSERT: Feature Inventory from Blueprint]
     """,
     'depends': [
         'base',
-        # [INSERT: Các dependencies khác lấy từ ma trận phía trên]
+        # [INSERT: Other dependencies from the matrix above]
     ],
     'data': [
-        # BẮT BUỘC THEO THỨ TỰ ODOO 18:
-        # 1. security/ir.model.access.csv (Luôn nạp đầu tiên để tránh lỗi ACL)
+        # MANDATORY ORDER FOR ODOO 18:
+        # 1. security/ir.model.access.csv (Always load first to avoid ACL errors)
         # 2. security/security_rules.xml
         # 3. data/*.xml (Sequences, Crons, Default Data)
-        # 4. views/*.xml (Luôn dùng thẻ <list>, KHÔNG dùng thẻ <tree> cũ)
+        # 4. views/*.xml (Always use the <list> tag, DO NOT use the deprecated <tree> tag)
         # 5. wizard/*.xml
         # 6. report/*.xml
     ],
@@ -254,5 +253,5 @@ Sinh mới với cấu trúc xương sống dưới đây. Bắt buộc giữ ng
 }
 ```
 
-> Xem thêm rules về `data[]` ordering tại: `steps/02-scaffold/data-path-rules.md`
-> Xem template đầy đủ với mọi comment giải thích tại: `references/templates/manifest_template.py`
+> See more rules on `data[]` ordering at: `steps/02-scaffold/data-path-rules.md`
+> See full template with comments at: `references/templates/manifest_template.py`

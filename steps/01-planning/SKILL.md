@@ -5,13 +5,18 @@ description: Use when starting any new Odoo 18 custom addon — from a vague ide
 
 # Step 01 — Planning & Discovery
 
-## Overview
+## When to Use This Step
+- Use this skill when starting a brand new Odoo 18 custom addon development process.
+- Triggers when the user expresses a new idea, feature request, or describes a business problem requiring Odoo customization.
 
-This step transforms a vague idea into a **confirmed technical blueprint** for an Odoo 18 addon.
+## When NOT to Use This Step
+- Do not use this skill if the high-level Technical Blueprint is already finalized and confirmed.
+- Do not use this skill for downstream phases (scaffolding, database design, view creation, security rules) without a confirmed design.
 
-**Core constraint:** Agent MUST NOT proceed to `02-scaffold` until the user explicitly confirms the completed `output-template.md`.
-
-**Tech stack is fixed:** Odoo 18 (Community or Enterprise). Never question this.
+## Routing Context
+- **Receives from:** Initial User request
+- **Feeds into:** `steps/02-scaffold/SKILL.md`, `steps/03-business-logic/SKILL.md`
+- **Requires confirmation:** Yes (Semi-auto gate)
 
 ---
 
@@ -21,7 +26,7 @@ This step transforms a vague idea into a **confirmed technical blueprint** for a
 
 Open an **AI-to-User interview session**. Announce this explicitly:
 
-> *"Thiếp sẽ mở phiên phỏng vấn khám phá yêu cầu. Chàng cứ trình bày ý tưởng, thiếp sẽ hỏi để làm rõ từng bước."*
+> *"I will open a requirement discovery interview session. Please present your idea, and I will ask questions step-by-step to clarify."*
 
 ### Loading Instructions
 
@@ -118,7 +123,7 @@ After the analysis, estimate:
 ### Stop Gate 2 ✅
 
 Before proceeding to Phase 3, present the technical analysis summary to the user:
-> *"Đây là kết quả phân tích kỹ thuật. Chàng có góp ý gì trước khi thiếp điền vào output template không?"*
+> *"Here is the technical analysis summary. Please review and provide any feedback before the output template is filled."*
 
 ---
 
@@ -138,7 +143,7 @@ Fill `./output-template.md` completely using all findings from Phases 1 and 2.
 
 The completed `output-template.md` is the **single input artifact** for `02-scaffold`.
 Attach it to the handoff message:
-> *"Step 01 hoàn tất. Output template đã sẵn sàng. Chàng gõ lệnh bắt đầu Step 02 khi nào muốn."*
+> *"Step 01 complete. The confirmed Blueprint is ready. Trigger Step 02 whenever ready."*
 
 ---
 
