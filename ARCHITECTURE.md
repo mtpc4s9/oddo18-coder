@@ -41,6 +41,7 @@ odoo18-coder/
     │   └── security-patterns.md          # Các mẫu phân quyền chuẩn
     ├── templates/                        # Single source of truth — Odoo 18 base. NOTE: Các sub-skill SKILL.md phải trỏ đường dẫn tường minh (explicit pointer) tới đúng folder này 
     │   ├── manifest_template.py
+    │   ├── init_template.py
     │   ├── model_template.py
     │   ├── view_template.xml
     │   └── security_template.csv
