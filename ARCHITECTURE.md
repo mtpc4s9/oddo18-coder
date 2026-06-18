@@ -90,4 +90,3 @@ steps/
     │                                   # Note: Defines BL-XX ID system for logic traceability
     └── output-template.md              # Output format for the Business Logic Design document
                                         # → Feeds into steps 04-models, 05-security, 06-views
-
